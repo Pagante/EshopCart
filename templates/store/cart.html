@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active">Cart</li>
+        </ul>
+    </div>
+</div>
+      <!-- Breadcrumb End -->
+      <!-- Cart Start -->
+      <div class="cart-page">
+          <div class="container-fluid">
+            {% if not cart_items %}
+            <h5 class="text-center">You Shopping Cart is Empty</h5>
+            <div class="text-center">
+              <a class="btn m-2" href="{% url 'store' %}">Continue Shopping</a>
+            </div>
+            {% else %}
+              <div class="row">
+                  <div class="col-lg-8">
+                      <div class="cart-page-inner">
+                          <div class="table-responsive">
+                              <table class="table table-bordered">
+                                  <thead class="thead-dark">
+                                      <tr>
+                                          <th>Product</th>
+                                          <th>Price</th>
+                                          <th>Quantity</th>
+                                          <th>Total</th>
+                                          <th>Remove</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody class="align-middle">
+                                    {% for cart_item in cart_items %}
+                                      <tr>
+                                          <td>
+                                              <div class="img">
+                                                  <a href="{{cart_item.product.get_url}}"><img src="{{cart_item.product.images.url}}" alt="Image"></a>
+                                                  <p>{{cart_item.product.product_name}}</p>
+                                                  
+                                              </div>
+                                              <span class="text-muted">
+                                                {% if cart_item.variations.all %}
+                                                {% for item in cart_item.variations.all %}
+                                                    {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst}} <br>
+                                                {% endfor %}
+                                                {% endif %}
+                                              </span>  
+                                          </td>
+                                          <td>₦{{cart_item.product.price |intcomma}}</td>
+                                          <td>
+                                              <div class="input-group input-spinner">
+                                                    <div class="input-group-prepend">
+                                                        <a href="{% url 'remove_cart' cart_item.product.id cart_item.id %}">
+                                                            <button class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </button>
+                                                        </a>
+                                                        <input type="text" class="form-control"  value="{{ cart_item.quantity }}">
+                                                        <form method="post" action="{% url 'add_cart' cart_item.product.id %}">
+                                                            {% csrf_token %}
+                                                            {% for item in cart_item.variations.all %}
+                                                            <input type="hidden" name="{{ item.variation_category | lower }}" value="{{ item.variation_value }}">
+                                                            {% endfor %}
+                                                            <button type="submit" class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
+                                                        </form>
+                                                    </div>
+                                                    
+                                                    <!-- <div class="input-group-append">
+                                                        
+                                                    </div> -->
+                                                </div>
+                                          </td>
+                                          <td>₦{{cart_item.sub_total | intcomma}}</td>
+                                          <td>
+                                            <a class="" href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}" onclick="return confirm('Are you sure you want to remove this item?')">
+                                            <button><i class="fa fa-trash"></i></button>
+                                            </a>
+                                          </td>
+                                      </tr>
+                                      {% endfor %}
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-4">
+                      <div class="cart-page-inner">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="cart-summary">
+                                      <div class="cart-content">
+                                          <h1>Cart Summary</h1>
+                                          <p>Sub Total<span>₦{{total | intcomma}}</span></p>
+                                          <!-- <p>Shipping Cost<span>₦{{shipping | intcomma}}0</span></p> -->
+                                          <h2>Grand Total<span>₦{{grand_total | intcomma}}0</span></h2>
+                                      </div>
+                                      <form class="" action="{% url 'checkout' %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="cart-btn" style="text-align:center">
+                                            <button style="display: none;">Update Cart</button>
+                                            <button >Checkout</button>
+                                        </div>
+                                      </form>
+
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              {% endif %}
+          </div>
+      </div>
+      <!-- Cart End -->
+{% endblock %}
