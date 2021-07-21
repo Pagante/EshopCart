@@ -44,15 +44,15 @@
                                               <div class="img">
                                                   <a href="{{cart_item.product.get_url}}"><img src="{{cart_item.product.images.url}}" alt="Image"></a>
                                                   <p>{{cart_item.product.product_name}}</p>
-                                                  
+
                                               </div>
-                                              <span class="text-muted">
+                                              <p class="text-muted">
                                                 {% if cart_item.variations.all %}
                                                 {% for item in cart_item.variations.all %}
                                                     {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst}} <br>
                                                 {% endfor %}
                                                 {% endif %}
-                                              </span>  
+                                              </p>
                                           </td>
                                           <td>₦{{cart_item.product.price |intcomma}}</td>
                                           <td>
@@ -70,9 +70,9 @@
                                                             <button type="submit" class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </button>
                                                         </form>
                                                     </div>
-                                                    
+
                                                     <!-- <div class="input-group-append">
-                                                        
+
                                                     </div> -->
                                                 </div>
                                           </td>
@@ -97,7 +97,7 @@
                                       <div class="cart-content">
                                           <h1>Cart Summary</h1>
                                           <p>Sub Total<span>₦{{total | intcomma}}</span></p>
-                                          <!-- <p>Shipping Cost<span>₦{{shipping | intcomma}}0</span></p> -->
+                                          <p>Shipping Cost<span>₦{{shipping | intcomma}}0</span></p>
                                           <h2>Grand Total<span>₦{{grand_total | intcomma}}0</span></h2>
                                       </div>
                                       <form class="" action="{% url 'checkout' %}" method="post">
